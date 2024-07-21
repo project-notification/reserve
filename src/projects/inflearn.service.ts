@@ -59,12 +59,12 @@ export class InflearnService {
         );
         if (topics.length === 0) {
           return {
-            ...project,
+            title: project.title,
           };
         }
 
         return {
-          ...project,
+          title: project.title,
           topics,
         };
       })
