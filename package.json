@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.3",
+    "@aws-sdk/client-dynamodb": "^3.616.0",
+    "@aws-sdk/lib-dynamodb": "^3.616.0",
     "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.4.5"
   }

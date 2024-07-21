@@ -1,17 +1,25 @@
-import { ProjectService } from './projects/project.service';
+import { InflearnService } from './projects/inflearn.service';
+import { HolaService } from './projects/hola.service';
+import { ReservationService } from './reservation/reservation.service';
+
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
 async function main() {
-  const response = await fetch('https://www.inflearn.com/community/projects');
-  const html = await response.text();
+  const inflearnService = new InflearnService();
+  const inflearnProjects = await inflearnService.getProjects();
 
-  const projectService = new ProjectService(html);
+  const holaService = new HolaService();
+  const holaProjects = await holaService.getProjects();
 
-  const projects = await projectService.getProjects();
+  const allProjects = [...inflearnProjects, ...holaProjects];
 
-  console.log(projects);
+  const reservationService = new ReservationService();
+
+  for (const project of allProjects) {
+    await reservationService.reserveEmail(project);
+  }
 }
 
 main();
