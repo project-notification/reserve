@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 async function main() {
-  const response = await fetch('https://www.inflearn.com/community/questions');
+  const response = await fetch('https://www.inflearn.com/community/projects');
   const html = await response.text();
 
   const projectService = new ProjectService(html);

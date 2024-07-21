@@ -8,9 +8,9 @@ export class ProjectService {
     this.aiService = new AIService();
   }
 
-  getProjects() {
+  async getProjects() {
     const recentProjects = this.getRecentProject();
-    return recentProjects;
+    return await this.addTopics(recentProjects);
   }
 
   getRecentProject() {
@@ -23,7 +23,7 @@ export class ProjectService {
         .eq(2)
         .text()
         .trim();
-      return timeText.includes('분 전');
+      return timeText.includes('2시간 전');
     });
 
     return recentProjects
@@ -44,7 +44,25 @@ export class ProjectService {
       .get();
   }
 
-  addTopics(projects: { title: string; tags: string[] }[]) {
+  async addTopics(projects: { title: string; tags: string[] }[]) {
     const clonedProjects = projects.map((project) => ({ ...project }));
+    return Promise.all(
+      clonedProjects.map(async (project) => {
+        const topics = await this.aiService.askTopics(
+          project.title,
+          project.tags
+        );
+        if (topics.length === 0) {
+          return {
+            ...project,
+          };
+        }
+
+        return {
+          ...project,
+          topics,
+        };
+      })
+    );
   }
 }

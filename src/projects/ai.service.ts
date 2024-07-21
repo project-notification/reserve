@@ -31,7 +31,8 @@ export class AIService {
       return msg.content[0].text
         .trim()
         .split(',')
-        .map((v) => v.trim());
+        .map((v) => v.trim())
+        .filter((v) => v !== '없음');
     } else {
       console.log(msg);
       throw new Error('No text response');
