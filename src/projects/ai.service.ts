@@ -7,6 +7,7 @@ export class AIService {
   }
 
   async askTopics(title: string, tags: string[]) {
+    console.log(`${title}\ntags:${tags.join(',')}`);
     const msg = await this.anthropic.messages.create({
       model: process.env.MODEL!,
       max_tokens: 200,
@@ -25,6 +26,15 @@ export class AIService {
         },
       ],
     });
-    return msg;
+
+    if (msg.content[0]?.type === 'text') {
+      return msg.content[0].text
+        .trim()
+        .split(',')
+        .map((v) => v.trim());
+    } else {
+      console.log(msg);
+      throw new Error('No text response');
+    }
   }
 }
