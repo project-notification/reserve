@@ -61,11 +61,12 @@ export class HolaService {
       return {
         title,
         tags,
+        url,
       };
     });
   }
 
-  addTopics(projects: { title: string; tags: string[] }[]) {
+  addTopics(projects: { title: string; tags: string[]; url: string }[]) {
     const clonedProjects = projects.map((project) => ({ ...project }));
     return Promise.all(
       clonedProjects.map(async (project) => {
@@ -76,11 +77,13 @@ export class HolaService {
         if (topics.length === 0) {
           return {
             title: project.title,
+            url: project.url,
           };
         }
 
         return {
           title: project.title,
+          url: project.url,
           topics,
         };
       })
