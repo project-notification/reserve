@@ -1,43 +1,44 @@
 import * as cheerio from 'cheerio';
 import { AIService } from './ai.service';
-export class ProjectService {
-  private $: cheerio.CheerioAPI;
+export class InflearnService {
   private aiService: AIService;
-  constructor(html: string) {
-    this.$ = cheerio.load(html);
+  constructor() {
     this.aiService = new AIService();
   }
 
   async getProjects() {
-    const inflearnProjects = this.getInflearnProject();
-    return await this.addTopics(inflearnProjects);
+    const recentProject = await this.getRecentProject();
+    return await this.addTopics(recentProject);
   }
 
-  getInflearnProject() {
-    const allProjectList = this.$('.question-container');
+  async getRecentProject() {
+    const response = await fetch('https://www.inflearn.com/community/projects');
+    const html = await response.text();
+    const $ = cheerio.load(html);
+    const allProjectList = $('.question-container');
 
     const recentProjects = allProjectList.filter((_, element) => {
-      const timeText = this.$(element)
+      const timeText = $(element)
         .find('.question__info-detail')
         .children('span')
         .eq(2)
         .text()
         .trim();
-      return timeText.includes('2시간 전');
+      return timeText.includes('분 전');
     });
 
     return recentProjects
       .map((_, element) => {
-        const title = this.$(element).find('h3').text().trim();
-        const tags = this.$(element)
+        const title = $(element).find('h3').text().trim();
+        const tags = $(element)
           .find('span.ac-tag__name')
           .map((_, element) => {
-            return this.$(element).text().trim();
+            return $(element).text().trim();
           })
           .get();
 
         const url =
-          'https://www.inflearn.com' + this.$(element).find('a').attr('href');
+          'https://www.inflearn.com' + $(element).find('a').attr('href');
 
         return {
           title,
