@@ -56,6 +56,8 @@ export class HolaService {
           return '';
         });
 
+      const url = `https://holaworld.io/study/${post._id}`;
+
       return {
         title,
         tags,

@@ -49,7 +49,7 @@ export class InflearnService {
       .get();
   }
 
-  async addTopics(projects: { title: string; tags: string[] }[]) {
+  async addTopics(projects: { title: string; tags: string[]; url: string }[]) {
     const clonedProjects = projects.map((project) => ({ ...project }));
     return Promise.all(
       clonedProjects.map(async (project) => {
@@ -60,11 +60,13 @@ export class InflearnService {
         if (topics.length === 0) {
           return {
             title: project.title,
+            url: project.url,
           };
         }
 
         return {
           title: project.title,
+          url: project.url,
           topics,
         };
       })
