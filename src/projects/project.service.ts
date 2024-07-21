@@ -9,11 +9,11 @@ export class ProjectService {
   }
 
   async getProjects() {
-    const recentProjects = this.getRecentProject();
-    return await this.addTopics(recentProjects);
+    const inflearnProjects = this.getInflearnProject();
+    return await this.addTopics(inflearnProjects);
   }
 
-  getRecentProject() {
+  getInflearnProject() {
     const allProjectList = this.$('.question-container');
 
     const recentProjects = allProjectList.filter((_, element) => {
@@ -36,9 +36,13 @@ export class ProjectService {
           })
           .get();
 
+        const url =
+          'https://www.inflearn.com' + this.$(element).find('a').attr('href');
+
         return {
           title,
           tags,
+          url,
         };
       })
       .get();

@@ -7,7 +7,6 @@ export class AIService {
   }
 
   async askTopics(title: string, tags: string[]) {
-    console.log(`${title}\ntags:${tags.join(',')}`);
     const msg = await this.anthropic.messages.create({
       model: process.env.MODEL!,
       max_tokens: 200,
