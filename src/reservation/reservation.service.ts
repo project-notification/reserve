@@ -1,10 +1,13 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 import { ScanCommand } from '@aws-sdk/lib-dynamodb';
 
 export class ReservationService {
-  private client: DynamoDBClient;
+  private dynamoClient: DynamoDBClient;
+  private sqsClient: SQSClient;
   constructor() {
-    this.client = new DynamoDBClient({});
+    this.dynamoClient = new DynamoDBClient({});
+    this.sqsClient = new SQSClient({});
   }
 
   async reserveEmail(project: {
@@ -21,7 +24,17 @@ export class ReservationService {
         ...new Set([...topicSubscribers, ...allSubscribers]),
       ];
 
-      console.log(subscribers);
+      for (const email of subscribers) {
+        const command = new SendMessageCommand({
+          QueueUrl: process.env.SQS_URL,
+          MessageBody: JSON.stringify({
+            email,
+            project,
+          }),
+        });
+
+        await this.sqsClient.send(command);
+      }
     }
   }
 
@@ -42,7 +55,7 @@ export class ReservationService {
       ExpressionAttributeValues: expressionAttributeValues,
     });
 
-    const result = await this.client.send(command);
+    const result = await this.dynamoClient.send(command);
     const subscriptionList = result.Items as SubscriptionInfo[];
     return subscriptionList.map((subscription) => subscription.email);
   }
@@ -56,7 +69,7 @@ export class ReservationService {
       },
     });
 
-    const result = await this.client.send(command);
+    const result = await this.dynamoClient.send(command);
     const subscriptionList = result.Items as SubscriptionInfo[];
     return subscriptionList.map((subscription) => subscription.email);
   }
