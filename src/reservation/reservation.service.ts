@@ -15,27 +15,25 @@ export class ReservationService {
     url: string;
     topics?: string[];
   }) {
+    const allSubscribers = await this.getAllTopicSubscribers();
+    let subscribers: string[] = [];
     if (!project.topics) {
-      return;
+      subscribers = allSubscribers;
     } else {
       const topicSubscribers = await this.getSubscribersByTopic(project.topics);
-      const allSubscribers = await this.getAllTopicSubscribers();
-      const subscribers = [
-        ...new Set([...topicSubscribers, ...allSubscribers]),
-      ];
 
-      for (const email of subscribers) {
-        console.log('b', project.title, email);
-        const command = new SendMessageCommand({
-          QueueUrl: process.env.SQS_URL,
-          MessageBody: JSON.stringify({
-            email,
-            project,
-          }),
-        });
+      subscribers = [...new Set([...topicSubscribers, ...allSubscribers])];
+    }
+    for (const email of subscribers) {
+      const command = new SendMessageCommand({
+        QueueUrl: process.env.SQS_URL,
+        MessageBody: JSON.stringify({
+          email,
+          project,
+        }),
+      });
 
-        await this.sqsClient.send(command);
-      }
+      await this.sqsClient.send(command);
     }
   }
 

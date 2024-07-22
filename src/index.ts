@@ -15,7 +15,6 @@ export const handler: Handler = async () => {
   const reservationService = new ReservationService();
 
   for (const project of allProjects) {
-    console.log('a', project.title);
     await reservationService.reserveEmail(project);
   }
 };
