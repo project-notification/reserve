@@ -24,8 +24,6 @@ export class ReservationService {
 
       subscribers = [...new Set([...topicSubscribers, ...allSubscribers])];
     }
-    console.log('title:', project.title);
-    console.log('subscribers:', subscribers);
     for (const email of subscribers) {
       const command = new SendMessageCommand({
         QueueUrl: process.env.SQS_URL,
