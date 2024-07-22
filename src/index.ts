@@ -1,12 +1,9 @@
 import { InflearnService } from './projects/inflearn.service';
 import { HolaService } from './projects/hola.service';
 import { ReservationService } from './reservation/reservation.service';
+import { Handler } from 'aws-lambda';
 
-import * as dotenv from 'dotenv';
-
-dotenv.config();
-
-async function main() {
+export const handler: Handler = async () => {
   const inflearnService = new InflearnService();
   const inflearnProjects = await inflearnService.getProjects();
 
@@ -20,6 +17,4 @@ async function main() {
   for (const project of allProjects) {
     await reservationService.reserveEmail(project);
   }
-}
-
-main();
+};
