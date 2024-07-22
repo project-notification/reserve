@@ -7,6 +7,8 @@ export const handler: Handler = async () => {
   const inflearnService = new InflearnService();
   const inflearnProjects = await inflearnService.getProjects();
 
+  console.log('inflearnProjects', inflearnProjects);
+
   const holaService = new HolaService();
   const holaProjects = await holaService.getProjects();
 
