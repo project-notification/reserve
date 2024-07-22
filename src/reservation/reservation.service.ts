@@ -25,6 +25,7 @@ export class ReservationService {
       ];
 
       for (const email of subscribers) {
+        console.log('b', project.title, email);
         const command = new SendMessageCommand({
           QueueUrl: process.env.SQS_URL,
           MessageBody: JSON.stringify({

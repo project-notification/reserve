@@ -17,8 +17,6 @@ export class InflearnService {
     const $ = cheerio.load(html);
     const allProjectList = $('.question-container');
 
-    console.log('allProjectList', allProjectList.length);
-
     const recentProjects = allProjectList.filter((_, element) => {
       const timeText = $(element)
         .find('.question__info-detail')
@@ -28,8 +26,6 @@ export class InflearnService {
         .trim();
       return timeText.includes('분 전');
     });
-
-    console.log('recentProjects', recentProjects.length);
 
     return recentProjects
       .map((_, element) => {
