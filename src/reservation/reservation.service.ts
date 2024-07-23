@@ -15,14 +15,15 @@ export class ReservationService {
     url: string;
     topics?: string[];
   }) {
-    const allSubscribers = await this.getAllTopicSubscribers();
     let subscribers: string[] = [];
     if (!project.topics) {
+      const allSubscribers = await this.getAllSubscribers();
       subscribers = allSubscribers;
     } else {
+      const allTopicSubscribers = await this.getAllTopicSubscribers();
       const topicSubscribers = await this.getSubscribersByTopic(project.topics);
 
-      subscribers = [...new Set([...topicSubscribers, ...allSubscribers])];
+      subscribers = [...new Set([...topicSubscribers, ...allTopicSubscribers])];
     }
     for (const email of subscribers) {
       const command = new SendMessageCommand({
@@ -66,6 +67,16 @@ export class ReservationService {
       ExpressionAttributeValues: {
         ':empty': 0,
       },
+    });
+
+    const result = await this.dynamoClient.send(command);
+    const subscriptionList = result.Items as SubscriptionInfo[];
+    return subscriptionList.map((subscription) => subscription.email);
+  }
+
+  async getAllSubscribers() {
+    const command = new ScanCommand({
+      TableName: 'subscription',
     });
 
     const result = await this.dynamoClient.send(command);
