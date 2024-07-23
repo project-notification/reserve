@@ -12,6 +12,8 @@ export const handler: Handler = async () => {
 
   const allProjects = [...inflearnProjects, ...holaProjects];
 
+  console.log('projects:', allProjects);
+
   const reservationService = new ReservationService();
 
   for (const project of allProjects) {
