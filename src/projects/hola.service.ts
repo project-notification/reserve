@@ -17,7 +17,7 @@ export class HolaService {
     const data: { posts: Post[] } = await response.json();
     const posts = data.posts;
 
-    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000 * 1); // 1시간 전
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000 * 2); // 1시간 전
 
     const recentProjects = posts.filter((post) => {
       const postDate = new Date(post.createdAt); // ISO 8601 문자열을 Date 객체로 변환
