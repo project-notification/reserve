@@ -26,15 +26,19 @@ export class ReservationService {
       subscribers = [...new Set([...topicSubscribers, ...allTopicSubscribers])];
     }
     for (const email of subscribers) {
+      const messageBody = {
+        email,
+        project,
+      };
       const command = new SendMessageCommand({
         QueueUrl: process.env.SQS_URL,
-        MessageBody: JSON.stringify({
-          email,
-          project,
-        }),
+        MessageBody: JSON.stringify(messageBody),
       });
 
-      await this.sqsClient.send(command);
+      const result = await this.sqsClient.send(command);
+
+      console.log('messageBody:', messageBody);
+      console.log('result:', result);
     }
   }
 
