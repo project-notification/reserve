@@ -24,7 +24,7 @@ export class InflearnService {
         .eq(2)
         .text()
         .trim();
-      return timeText.includes('1시간 전');
+      return timeText.includes('분 전');
     });
 
     return recentProjects

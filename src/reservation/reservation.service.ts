@@ -35,10 +35,7 @@ export class ReservationService {
         MessageBody: JSON.stringify(messageBody),
       });
 
-      const result = await this.sqsClient.send(command);
-
-      console.log('messageBody:', messageBody);
-      console.log('result:', result);
+      await this.sqsClient.send(command);
     }
   }
 
