@@ -14,8 +14,7 @@ export class HolaService {
     const response = await fetch(
       'https://api.holaworld.io/api/posts/pagination?page=1&sort=-createdAt&position=ALL&type=1&isClosed=false&onOffLine=ALL'
     );
-    const data: { posts: Post[] } = await response.json();
-    const posts = data.posts;
+    const posts = (await response.json()) as Post[];
 
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000 * 1); // 1시간 전
 
